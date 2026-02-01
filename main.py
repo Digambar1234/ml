@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
+import os
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+
+
 
 app = FastAPI()
 
@@ -32,5 +35,11 @@ def predict(data: InputData):
     X = np.array(data.features).reshape(1, -1)
     prediction = model.predict(X)
     return {"prediction": float(prediction[0])}
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, "regression_model.pkl")
+
+model = joblib.load(model_path)
 
 
